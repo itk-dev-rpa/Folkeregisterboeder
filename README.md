@@ -1,57 +1,101 @@
-# Robot-Framework V2
+# Folkeregisterbøder (Udsendelse af afgørelser + Fakturering)
 
-This repo is meant to be used as a template for robots made for [OpenOrchestrator](https://github.com/itk-dev-rpa/OpenOrchestrator).
 
-## Quick start
+## Queue elements
 
-1. To use this template simply use this repo as a template (see [Creating a repository from a template](https://docs.github.com/en/repositories/creating-and-managing-repositories/creating-a-repository-from-a-template)).
-__Don't__ include all branches.
+A queue elements reference is a combination of the email address of the requester
+and the timestamp of when the email was read.
 
-2. Go to `robot_framework/__main__.py` and choose between the linear framework or queue based framework.
+E.g.:
+`hello@mail.com;2024-04-01T00:00:00`
 
-3. Implement all functions in the files:
-    * `robot_framework/initialize.py`
-    * `robot_framework/reset.py`
-    * `robot_framework/process.py`
+Queue elements should be created with the following data:
 
-4. Change `config.py` to your needs.
+Queue element data:
 
-5. Fill out the dependencies in the `pyproject.toml` file with all packages needed by the robot.
+```json
+{
+    "task_date": "iso date",
+    "move_date": "iso date",
+    "register_date": "iso date",
+    "eflyt_case_number": "string",
+    "eflyt_categories": "string",
+    "eflyt_status": "string",
+    "cpr": "string",
+    "name": "string"
+}
 
-6. Feel free to add more files as needed. Remember that any additional python files must
-be located in the folder `robot_framework` or a subfolder of it.
+//Example:
+{
+    "date": "2024-04-01T00:00:00",
+    "move_date": "2024-04-01T00:00:00",
+    "register_date": "2024-04-20T00:00:00",
+    "eflyt_case_number": "123456789",
+    "eflyt_categories": "For sent anmeldt, Boligselskab",
+    "eflyt_status": "I gang",
+    "cpr": "8412893981",
+    "name": "Testbruger Et"
+}
+```
 
-When the robot is run from OpenOrchestrator the `main.py` file is run which results
-in the following:
-1. The working directory is changed to where `main.py` is located.
-2. A virtual environment is automatically setup with the required packages.
-3. The framework is called passing on all arguments needed by [OpenOrchestrator](https://github.com/itk-dev-rpa/OpenOrchestrator).
+During the process the message field of the queue element is used both for storing resulting data
+and for tracking the progress of the queue element.
 
-## Requirements
-Minimum python version 3.10
+Queue element "message" (working data):
 
-## Flow
+```json
+{
+    "address": "string",
+    "nova_case_uuid": "string",
+    "nova_case_number": "string",
+    "document_id": "string",
+    "letter_date": "iso date",
+    "invoice_date": "iso date",
+    "journal_date": "iso date"
+}
 
-This framework contains two different flows: A linear and a queue based.
-You should only ever use one at a time. You choose which one by going into `robot_framework/__main__.py`
-and uncommenting the framework you want. They are both disabled by default and an error will be
-raised to remind you if you don't choose.
+//Example:
+{
+    "address": "Hejvej 1, 1234 Hejby",
+    "nova_case_uuid": "8d50ee05-5799-4a7b-8c94-e86679f2a051",
+    "nova_case_number": "S2024-12345",
+    "document_id": "D2024-12345",
+    "letter_date": "2024-04-29T13:24:33.273767",
+    "invoice_date": "2024-04-29T13:25:33.273767",
+    "journal_date": "2024-04-29T13:26:33.273767"
+}
+```
 
-### Linear Flow
+## Process flow
 
-The linear framework is used when a robot is just going from A to Z without fetching jobs from an
-OpenOrchestrator queue.
-The flow of the linear framework is sketched up in the following illustration:
+To improve error handling and processing time the robot has a special process flow.
 
-![Linear Flow diagram](Robot-Framework.svg)
+A process consists of the following steps:
 
-### Queue Flow
+1. Get case address.
+2. Create Nova case.
+3. Generate and upload letter
+4. Send letter.
+5. Create invoice.
+6. Journalize invoice.
 
-The queue framework is used when the robot is doing multiple bite-sized tasks defined in an
-OpenOrchestrator queue.
-The flow of the queue framework is sketched up in the following illustration:
+After each step the respective queue element is updated to track the process.
 
-![Queue Flow diagram](Robot-Queue-Framework.svg)
+There should be a waiting period of about 10 minutes between step 5 and 6, which means
+the robot might need to continue on a second case before finishing the first to be
+more time efficient.
+
+To allow this the process will jump in and out after each step to check the queue to see what to do next.
+If a queue element is in progress it will be prioritized over a new element. A queue element that
+has waited more than 10 minutes between step 5 and 6 will be prioritized over other in progress queue elements.
+
+## Process arguments
+
+```json
+{
+    "approved users": [string, ...]
+}
+```
 
 ## Linting and Github Actions
 

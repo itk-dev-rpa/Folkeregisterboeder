@@ -84,7 +84,7 @@ def process(orchestrator_connection: OrchestratorConnection) -> None:
 
         # Send letter
         elif task.letter_date is None:
-            digital_post.send_digital_post(digital_post_header, digital_post_key, task.nova_case_uuid, task.document_uuid, "2106921973")  # TODO
+            digital_post.send_digital_post(digital_post_header, digital_post_key, task.nova_case_uuid, task.document_uuid, task.cpr)
             task.letter_date = datetime.today()
 
         # Create invoice

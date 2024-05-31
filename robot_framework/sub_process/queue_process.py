@@ -41,7 +41,7 @@ def get_next_task(orchestrator_connection: OrchestratorConnection) -> Task | Non
         if message_dict['invoice_date'] is not None:
             # Check if more than 10 minutes have passed
             invoice_date = datetime.fromisoformat(message_dict['invoice_date'])
-            if (datetime.today() - invoice_date) >= timedelta(minutes=1):  # TODO
+            if (datetime.today() - invoice_date) >= timedelta(minutes=10):
                 CURRENT_REFERENCE = queue_element.reference
                 return Task.from_queue_element(queue_element)
 

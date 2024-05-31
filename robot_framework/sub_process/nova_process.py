@@ -1,81 +1,13 @@
 """This module handles interaction with KMD Nova."""
 
-import os
 import uuid
 from datetime import datetime
 from io import BytesIO
 import time
 
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from OpenOrchestrator.orchestrator_connection.connection import OrchestratorConnection
 from itk_dev_shared_components.kmd_nova.authentication import NovaAccess
 from itk_dev_shared_components.kmd_nova import nova_cases, nova_documents
 from itk_dev_shared_components.kmd_nova.nova_objects import NovaCase, CaseParty, Caseworker, Department, Document
-
-from robot_framework import config
-
-
-# def login(orchestrator_connection: OrchestratorConnection) -> webdriver.Chrome:
-#     """Open a Chrome browser and login to KMD Nova.
-
-#     Args:
-#         orchestrator_connection: The connection to Orchestrator.
-
-#     Returns:
-#         A browser logged in to KMD Nova.
-#     """
-#     nova_creds = orchestrator_connection.get_credential(config.NOVA_CREDS)
-
-#     browser = webdriver.Chrome()
-#     browser.maximize_window()
-
-#     browser.get("http://kmdnovaesdh.kmd.dk/")
-
-#     wait = WebDriverWait(browser, 20)
-#     wait.until(EC.element_to_be_clickable((By.ID, "inputUsername")))
-
-#     browser.find_element(By.ID, "inputUsername").send_keys(nova_creds.username)
-#     browser.find_element(By.ID, "inputPassword").send_keys(nova_creds.password)
-#     browser.find_element(By.ID, "logonBtn").click()
-
-#     browser.minimize_window()
-
-#     return browser
-
-
-# def send_digital_post(browser: webdriver.Chrome, document_id: str) -> None:
-#     """Open a document in KMD Nova and send it as Digital Post.
-
-#     Args:
-#         browser: A browser logged in to KMD Nova.
-#         document_id: The id of the document e.g. D2024-123456
-#     """
-#     browser.maximize_window()
-
-#     browser.get(f"https://capwebwlbs-wm2q2012.kmd.dk/KMDNovaESDH/soegning/dokumenter/{document_id}")
-
-#     wait = WebDriverWait(browser, 20)
-
-#     more_button = wait.until(EC.element_to_be_clickable((By.ID, "document_details_show_multi_function")))
-#     more_button.click()
-
-#     browser.find_element(By.CSS_SELECTOR, "span.test-send-digital-post").click()
-
-#     # Wait for the popup to load properly by expanding the 'Flere oplysninger' panel and checking the 'IO Manager aftale' select element.
-#     wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "div.test-moreinfo-panel minor-collapsible-panel-header"))).click()
-#     wait.until(EC.text_to_be_present_in_element_value((By.ID, "model_digitalPost_AgreementKey"), 'af3156e4-c3b0-4c53-ad5f-a3b8c36f89d1'))
-
-#     send_button = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "#nova-dialog button.test-send")))
-#     send_button.click()
-
-#     # Wait for confirmation popup
-#     wait.until(EC.visibility_of_element_located((By.ID, "popup-notification")))
-#     # TODO
-
-#     browser.minimize_window()
 
 
 def create_case(cpr: str, name: str, nova_access: NovaAccess) -> tuple[str, str]:
@@ -206,13 +138,3 @@ def add_invoice_to_case(case_uuid: str, document_file: BytesIO, nova_access: Nov
     )
 
     nova_documents.attach_document_to_case(case_uuid, document, nova_access)
-
-
-if __name__ == '__main__':
-    conn_string = os.getenv("OpenOrchestratorConnString")
-    crypto_key = os.getenv("OpenOrchestratorKey")
-    oc = OrchestratorConnection("Nova test", conn_string, crypto_key, "")
-    b = login(oc)
-    for i in range(10):
-        send_digital_post(b, "D2024-140420")
-    print("hej")

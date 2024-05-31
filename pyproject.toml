@@ -30,5 +30,5 @@ dev = [
   "flake8"
 ]
 
-[tool.setuptools.build_meta]
-include = ['docs/*.docx']
+[tool.setuptools.package-data]
+robot_framework = ["docs/*.docx"]

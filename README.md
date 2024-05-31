@@ -1,5 +1,25 @@
 # Folkeregisterbøder (Udsendelse af afgørelser + Fakturering)
 
+## Process arguments
+
+The robot expects a json string as input in the following format:
+
+```json
+{
+    "digital_post_key": {
+        "Description": "",
+        "EncryptionKey": "",
+        "Id": "",
+        "IsDefault": bool
+    },
+    "approved users": [
+        ""
+    ]
+}
+```
+
+- __digital_post_key__ is a dictionary of information used to encrypt Digital Post in the Nova api.
+- __approved users__ is a list of az-ids of people who are allowed to make requests to the robot.
 
 ## Queue elements
 
@@ -85,17 +105,10 @@ There should be a waiting period of about 10 minutes between step 5 and 6, which
 the robot might need to continue on a second case before finishing the first to be
 more time efficient.
 
-To allow this the process will jump in and out after each step to check the queue to see what to do next.
+To allow this, the process will jump in and out after each step to check the queue to see what to do next.
 If a queue element is in progress it will be prioritized over a new element. A queue element that
 has waited more than 10 minutes between step 5 and 6 will be prioritized over other in progress queue elements.
 
-## Process arguments
-
-```json
-{
-    "approved users": [string, ...]
-}
-```
 
 ## Linting and Github Actions
 

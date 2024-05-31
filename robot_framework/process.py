@@ -2,6 +2,7 @@
 
 import os
 from datetime import datetime, timedelta
+import json
 
 from OpenOrchestrator.orchestrator_connection.connection import OrchestratorConnection
 from itk_dev_shared_components.kmd_nova.authentication import NovaAccess
@@ -26,7 +27,7 @@ def process(orchestrator_connection: OrchestratorConnection) -> None:
     nova_access = NovaAccess(nova_creds.username, nova_creds.password)
 
     digital_post_header = digital_post.get_headers(orchestrator_connection)
-    digital_post_key = digital_post.get_encryption_key(nova_access)
+    digital_post_key = json.loads(orchestrator_connection.process_arguments)['digital_post_key']
 
     eflyt_browser = eflyt.login(orchestrator_connection)
 
@@ -111,5 +112,5 @@ def process(orchestrator_connection: OrchestratorConnection) -> None:
 if __name__ == '__main__':
     conn_string = os.getenv("OpenOrchestratorConnString")
     crypto_key = os.getenv("OpenOrchestratorKey")
-    oc = OrchestratorConnection("Bøde test", conn_string, crypto_key, '{"approved users": ["az689333"]}')
+    oc = OrchestratorConnection("Bøde test", conn_string, crypto_key, 'INSERT SECRET INPUT')
     process(oc)

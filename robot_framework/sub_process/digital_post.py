@@ -11,7 +11,6 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from OpenOrchestrator.orchestrator_connection.connection import OrchestratorConnection
-from itk_dev_shared_components.kmd_nova.authentication import NovaAccess
 
 from robot_framework import config
 
@@ -72,30 +71,6 @@ def get_headers(orchestrator_connection: OrchestratorConnection) -> dict[str, st
     }
 
     return headers
-
-
-def get_encryption_key(nova_access: NovaAccess) -> dict:
-    """Get the encryption key used for Digital Post in Nova.
-
-    Args:
-        nova_access: The NovaAccess object used to authenticate.
-
-    Returns:
-        A dict represeneting the encryption key.
-    """
-    url = urllib.parse.urljoin(nova_access.domain, "api/DigitalPost/GetDoc2MailDocumentTypesAndEncryptions")
-    params = {
-        "api-version": "1.0-DigitalPost",
-        "TransactionId": str(uuid.uuid4())
-    }
-
-    headers = {'Content-Type': 'text', 'Authorization': f"Bearer {nova_access.get_bearer_token()}"}
-
-    response = requests.get(url, params=params, headers=headers, timeout=30)
-    response.raise_for_status()
-
-    response = response.json()
-    return response['digitalPostEncryption'][0]
 
 
 def send_digital_post(headers: dict, encryption_key: dict, case_uuid: str, doc_uuid: str, cpr: str):
@@ -168,17 +143,3 @@ def send_digital_post(headers: dict, encryption_key: dict, case_uuid: str, doc_u
 
     response = requests.post(url, headers=headers, json=payload, timeout=30)
     response.raise_for_status()
-
-
-if __name__ == '__main__':
-    conn_string = os.getenv("OpenOrchestratorConnString")
-    crypto_key = os.getenv("OpenOrchestratorKey")
-    oc = OrchestratorConnection("Bøde test", conn_string, crypto_key, "")
-
-    nova_creds = oc.get_credential(config.NOVA_API)
-    nova_access = NovaAccess(nova_creds.username, nova_creds.password)
-
-    digital_post_header = get_headers(oc)
-    digital_post_key = get_encryption_key(nova_access)
-
-    send_digital_post(digital_post_header, digital_post_key, "2162e1b2-b0e6-44c6-b89c-2938a27ce184", "929061b5-7cc7-4e81-b7e8-ca337d684c9f", "Bøde - For sent anmeldt flytning", "2106921973")

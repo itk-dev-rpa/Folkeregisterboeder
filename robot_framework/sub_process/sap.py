@@ -4,7 +4,6 @@ from datetime import datetime, timedelta
 import uuid
 
 import uiautomation
-from itk_dev_shared_components.sap import multi_session
 
 from robot_framework import config
 
@@ -160,7 +159,7 @@ def save_invoice(session, cpr: str, invoice_date: datetime):
         if table.GetCellValue(row, "DATE") == invoice_date.strftime("%d.%m.%Y") and table.GetCellValue(row, "ZZ_KONTAKTRELATION").startswith("FKRB"):
             break
     else:
-        raise ValueError("Couldn't find invoice with today's date.")
+        raise ValueError("Couldn't find an invoice on the invoice date.")
 
     # Open the document
     table.setCurrentCell(row, "DATE")
@@ -193,11 +192,3 @@ def _save_invoice_file():
     os.system("taskkill /F /IM msedge.exe > NUL 2>&1")
 
     return file_path
-
-
-if __name__ == '__main__':
-    session = multi_session.get_all_sap_sessions()[0]
-    # create_invoice(session, "8412893981", date(2024, 3, 1), date(2024, 3, 20), "Hejvej 1, 8092 Hejby")
-    # do_immediate_invoicing(session, "8412893981")
-    fp = save_invoice(session, "8412893981", datetime.today())
-    # os.remove(fp)

@@ -19,6 +19,7 @@ GRAPH_API = "Graph api"
 EFLYT_CREDS = "Eflyt"
 NOVA_CREDS = "Mathias KMD"
 NOVA_API = "Nova API"
+NOVA_KEY = "Nova Digital Post Key"
 
 QUEUE_NAME = "Folkeregisterbøder"
 

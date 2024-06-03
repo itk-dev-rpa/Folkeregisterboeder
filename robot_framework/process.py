@@ -63,16 +63,15 @@ def process(orchestrator_connection: OrchestratorConnection) -> None:
             fine_rate = sap.get_fine_rate(task.move_date + timedelta(days=6))
 
             keywords_replacements = {
-                "&lt;SENDE DATO&gt;": word_process.format_date(datetime.today()),
-                "&lt;MELDE DATO&gt;": word_process.format_date(task.register_date),
-                "&lt;FLYTTE DATO&gt;": word_process.format_date(task.move_date),
-                "&lt;MODTAGER NAVN&gt;": task.name,
-                "&lt;MODTAGER BY&gt;": task.address.split(",", maxsplit=1)[-1].strip(),
-                "&lt;ADRESSE&gt;": task.address,
-                "&lt;BELØB&gt;": str(fine_rate),
-                "&lt;KONTAKT NAVN&gt;": "Mads Halløjsen",  # TODO
-                "&lt;SAGSNUMMER&gt;": task.nova_case_number,
-                "&lt;DOKUMENTNUMMER&gt;": "AAAAHHH!!!",
+                "SENDEDATO": word_process.format_date(datetime.today()),
+                "ANMELDELSESDATO": word_process.format_date(task.register_date),
+                "FLYTTEDATO": word_process.format_date(task.move_date),
+                "MODTAGER_NAVN": task.name,
+                "MODTAGER_BY": task.address.split(",", maxsplit=1)[-1].strip(),
+                "ADRESSE": task.address,
+                "BELØB": str(fine_rate),
+                "KONTAKT": "Mads Halløjsen",  # TODO
+                "SAGSNUMMER": task.nova_case_number
             }
 
             word_process.replace_keywords_in_word_template(template_path, result_path, keywords_replacements)

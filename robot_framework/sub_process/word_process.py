@@ -66,16 +66,15 @@ if __name__ == '__main__':
     zip_file_out = r"C:\Users\az68933\Desktop\temp\Din flytning er anmeldt for sent 2.docx"
 
     keywords_replacements = {
-        "&lt;SENDE DATO&gt;": format_date(date.today()),
-        "&lt;MELDE DATO&gt;": format_date(date(2024, 3, 10)),
-        "&lt;FLYTTE DATO&gt;": format_date(date(2024, 3, 1)),
-        "&lt;MODTAGER NAVN&gt;": "Pernille Hejsen",
-        "&lt;MODTAGER BY&gt;": "2345 Hejstrup",
-        "&lt;ADRESSE&gt;": "Hejvej 2, 1234 Hejby",
-        "&lt;BELØB&gt;": "945",
-        "&lt;KONTAKT NAVN&gt;": "Mads Halløjsen",
-        "&lt;SAGSNUMMER&gt;": "S2024-12345",
-        "&lt;DOKUMENTNUMMER&gt;": "D2024-12345",
+        "SENDEDATO": format_date(date.today()),
+        "ANMELDELSESDATO": format_date(date(2024, 3, 10)),
+        "FLYTTEDATO": format_date(date(2024, 3, 1)),
+        "MODTAGER_NAVN": "Pernille Hejsen",
+        "MODTAGER_BY": "2345 Hejstrup",
+        "ADRESSE": "Hejvej 2, 1234 Hejby",
+        "BELØB": "945",
+        "KONTAKT": "Mads Halløjsen",  # TODO
+        "SAGSNUMMER": "S2024-12345"
     }
 
     replace_keywords_in_word_template(zip_file_in, zip_file_out, keywords_replacements)

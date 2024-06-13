@@ -1,3 +1,5 @@
+"""This module contains a single 'Task' dataclass."""
+
 from datetime import datetime
 from dataclasses import dataclass, asdict, fields
 import json
@@ -48,7 +50,9 @@ class Task:
 
     @classmethod
     def from_queue_element(cls, queue_element: QueueElement) -> Self:
-        """Convert two json strings to a Task object.
+        """Convert a queue element to a Task element
+        by getting the json strings from the queue element's
+        data and message attributes.
         All datetime fields are converted from iso format.
         """
         data_dict = json.loads(queue_element.data)

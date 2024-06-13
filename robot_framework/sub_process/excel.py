@@ -1,3 +1,4 @@
+"""This module is responsible for reading and writing Excel files in the correct format."""
 
 from io import BytesIO
 

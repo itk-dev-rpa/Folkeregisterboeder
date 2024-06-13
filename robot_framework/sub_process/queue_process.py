@@ -1,4 +1,4 @@
-
+"""This module handles interactions with the Orchestrator Queue including creating new queue elements from emails."""
 
 import json
 from datetime import datetime, timedelta

@@ -1,3 +1,4 @@
+"""This module is responsible for interactions with the SAP UI."""
 
 import os
 from datetime import datetime, timedelta

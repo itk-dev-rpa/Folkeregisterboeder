@@ -60,23 +60,23 @@ def format_date(in_date: date) -> str:
     return f"{in_date.day}. {months[in_date.month-1]} {in_date.year}"
 
 
-if __name__ == '__main__':
-    # Example usage:
-    zip_file_in = r"C:\Users\az68933\Desktop\temp\Din flytning er anmeldt for sent.docx"
-    zip_file_out = r"C:\Users\az68933\Desktop\temp\Din flytning er anmeldt for sent 2.docx"
+# if __name__ == '__main__':
+#     # Example usage:
+#     zip_file_in = r"C:\Users\az68933\Desktop\temp\Din flytning er anmeldt for sent.docx"
+#     zip_file_out = r"C:\Users\az68933\Desktop\temp\Din flytning er anmeldt for sent 2.docx"
 
-    keywords_replacements = {
-        "SENDEDATO": format_date(date.today()),
-        "ANMELDELSESDATO": format_date(date(2024, 3, 10)),
-        "FLYTTEDATO": format_date(date(2024, 3, 1)),
-        "MODTAGER_NAVN": "Pernille Hejsen",
-        "MODTAGER_BY": "2345 Hejstrup",
-        "ADRESSE": "Hejvej 2, 1234 Hejby",
-        "BELØB": "945",
-        "KONTAKT": "Mads Halløjsen",  # TODO
-        "SAGSNUMMER": "S2024-12345"
-    }
+#     keywords_replacements = {
+#         "SENDEDATO": format_date(date.today()),
+#         "ANMELDELSESDATO": format_date(date(2024, 3, 10)),
+#         "FLYTTEDATO": format_date(date(2024, 3, 1)),
+#         "MODTAGER_NAVN": "Pernille Hejsen",
+#         "MODTAGER_BY": "2345 Hejstrup",
+#         "ADRESSE": "Hejvej 2, 1234 Hejby",
+#         "BELØB": "945",
+#         "KONTAKT": "Mads Halløjsen",
+#         "SAGSNUMMER": "S2024-12345"
+#     }
 
-    replace_keywords_in_word_template(zip_file_in, zip_file_out, keywords_replacements)
+#     replace_keywords_in_word_template(zip_file_in, zip_file_out, keywords_replacements)
 
-    os.startfile(zip_file_out)
+#     os.startfile(zip_file_out)

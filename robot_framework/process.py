@@ -51,9 +51,7 @@ def process(orchestrator_connection: OrchestratorConnection) -> None:
 
         # Create case
         elif task.nova_case_uuid is None:
-            case_uuid, case_number = nova_process.create_case(task.cpr, task.name, nova_access)
-            task.nova_case_uuid = case_uuid
-            task.nova_case_number = case_number
+            task.nova_case_uuid, task.nova_case_number = nova_process.create_case(task.cpr, task.name, nova_access)
 
         # Generate and upload letter
         elif task.document_uuid is None:

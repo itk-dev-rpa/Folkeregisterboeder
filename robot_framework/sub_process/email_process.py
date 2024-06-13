@@ -110,4 +110,4 @@ def send_acceptance(receiver_email: str):
     Args:
         receiver_email: The receiver of the email.
     """
-    smtp_util.send_email(receiver_email, "itk-rpa@mbk.aarhus.dk", "Folkeregisterbøder: Anmodning modtaget", f"Din anmodning om behandling af sager vedr. folkeregisterbøder er modtaget.\n\nVenlig hilsen\nRobotten", config.SMTP_SERVER, config.SMTP_PORT)
+    smtp_util.send_email(receiver_email, "itk-rpa@mbk.aarhus.dk", "Folkeregisterbøder: Anmodning modtaget", "Din anmodning om behandling af sager vedr. folkeregisterbøder er modtaget.\n\nVenlig hilsen\nRobotten", config.SMTP_SERVER, config.SMTP_PORT)

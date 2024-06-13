@@ -1,9 +1,6 @@
-import os
+"""This module is responsible for sending Digital Post through the KMD Nova UI."""
+
 import uuid
-from datetime import datetime
-from io import BytesIO
-import time
-import urllib
 
 import requests
 from selenium import webdriver

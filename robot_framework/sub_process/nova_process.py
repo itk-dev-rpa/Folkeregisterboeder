@@ -8,7 +8,7 @@ import time
 from itk_dev_shared_components.kmd_nova.authentication import NovaAccess
 from itk_dev_shared_components.kmd_nova import nova_cases, nova_documents
 from itk_dev_shared_components.kmd_nova import cpr as nova_cpr
-from itk_dev_shared_components.kmd_nova.nova_objects import NovaCase, CaseParty, Caseworker, Department, Document
+from itk_dev_shared_components.kmd_nova.nova_objects import NovaCase, CaseParty, Department, Document
 
 from robot_framework import config
 
@@ -156,17 +156,3 @@ def add_journal_to_case(case_uuid: str, document_file: BytesIO, nova_access: Nov
 def get_address_lines(cpr: str, nova_access: NovaAccess) -> list[str]:
     address = nova_cpr.get_address_by_cpr(cpr, nova_access)['address']
     return [address.get(f'addressLine{i}', '') for i in range(1, 6)]
-
-
-if __name__ == '__main__':
-    import os
-    from OpenOrchestrator.orchestrator_connection.connection import OrchestratorConnection
-
-    conn_string = os.getenv("OpenOrchestratorConnString")
-    crypto_key = os.getenv("OpenOrchestratorKey")
-
-    oc = OrchestratorConnection("Bøde test", conn_string, crypto_key, '{"approved users":["az68933"]}')
-    nova_creds = oc.get_credential(config.NOVA_API)
-    nova_access = NovaAccess(nova_creds.username, nova_creds.password)
-
-    print(get_address_lines("2106921973", nova_access))

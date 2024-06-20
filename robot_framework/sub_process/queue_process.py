@@ -128,7 +128,7 @@ def check_queue_and_email(orchestrator_connection: OrchestratorConnection):
             break
 
     if email_info:
-        tasks = excel.read_excel(email_info.excel_file)
+        tasks = excel.read_excel(email_info.excel_file, email_info.receiver_name)
         reference = f"{email_info.receiver_email};{datetime.today().isoformat()}"
 
         for task in tasks:

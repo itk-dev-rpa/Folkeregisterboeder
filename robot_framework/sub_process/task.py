@@ -20,6 +20,7 @@ class Task:
     eflyt_status: str
     cpr: str
     name: str
+    case_worker_name: str
 
     address: Optional[str] = None
     nova_case_uuid: Optional[str] = None
@@ -37,8 +38,8 @@ class Task:
         All datetime fields are converted to iso format.
         """
         task_dict = asdict(self)
-        data_dict = dict(list(task_dict.items())[0:8])
-        message_dict = dict(list(task_dict.items())[8:15])
+        data_dict = dict(list(task_dict.items())[0:9])
+        message_dict = dict(list(task_dict.items())[9:15])
 
         def datetime_encoder(obj):
             if isinstance(obj, datetime):

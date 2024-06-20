@@ -18,6 +18,7 @@ from robot_framework import config
 @dataclass(kw_only=True)
 class EmailInfo:
     """A dataclass representing an email."""
+    receiver_name: str
     receiver_email: str
     receiver_ident: str
     excel_file: BytesIO
@@ -64,13 +65,14 @@ def get_email_data(mail: graph_mail.Email, graph_access: GraphAccess) -> EmailIn
         An EmailInfo object with the relevant data.
     """
     text = mail.get_text()
-    receiver_email = re.findall(r"BrugerE-mail: (.+?)AZ-ident", text)[0]
+    receiver_name = re.findall(r"Navn: (.+?)E-mail", text)[0]
+    receiver_email = re.findall(r"E-mail: (.+?)AZ-ident", text)[0]
     receiver_ident = re.findall(r"AZ-ident: (.+?)Excel", text)[0]
 
     attachment = graph_mail.list_email_attachments(mail, graph_access)[0]
     excel_file = graph_mail.get_attachment_data(attachment, graph_access)
 
-    return EmailInfo(receiver_email=receiver_email, receiver_ident=receiver_ident, excel_file=excel_file)
+    return EmailInfo(receiver_name=receiver_name, receiver_email=receiver_email, receiver_ident=receiver_ident, excel_file=excel_file)
 
 
 def send_rejection(receiver_email: str):

@@ -35,8 +35,6 @@ def login(orchestrator_connection: OrchestratorConnection) -> webdriver.Chrome:
     browser.find_element(By.ID, "inputPassword").send_keys(nova_creds.password)
     browser.find_element(By.ID, "logonBtn").click()
 
-    browser.minimize_window()
-
     return browser
 
 

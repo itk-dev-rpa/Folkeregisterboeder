@@ -92,8 +92,8 @@ To improve error handling and processing time the robot has a special process fl
 
 A process consists of the following steps:
 
-1. Get case address.
-2. Create Nova case.
+1. Create Nova case.
+1. Get case address and upload case journal.
 3. Generate and upload letter
 4. Send letter.
 5. Create invoice.

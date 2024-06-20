@@ -43,15 +43,17 @@ def process(orchestrator_connection: OrchestratorConnection) -> None:
             orchestrator_connection.log_info("No more queue elements for now.")
             break
 
-        # Get address
-        if task.address is None:
-            eflyt_browser.maximize_window()
-            address = eflyt.search_case_address(eflyt_browser, task.eflyt_case_number)
-            task.address = address
-
         # Create case
-        elif task.nova_case_uuid is None:
+        if task.nova_case_uuid is None:
             task.nova_case_uuid, task.nova_case_number = nova_process.create_case(task.cpr, task.name, nova_access)
+
+        # Get address
+        elif task.address is None:
+            address, journal_path = eflyt.search_case_info(eflyt_browser, task.eflyt_case_number)
+            with open(journal_path, 'rb') as file:
+                nova_process.add_journal_to_case(task.nova_case_uuid, file, nova_access)
+
+            task.address = address
 
         # Generate and upload letter
         elif task.document_uuid is None:
@@ -60,15 +62,20 @@ def process(orchestrator_connection: OrchestratorConnection) -> None:
 
             fine_rate = sap.get_fine_rate(task.move_date + timedelta(days=6))
 
+            address_lines = nova_process.get_address_lines(task.cpr, nova_access)
+
             keywords_replacements = {
                 "SENDEDATO": word_process.format_date(datetime.today()),
                 "ANMELDELSESDATO": word_process.format_date(task.register_date),
                 "FLYTTEDATO": word_process.format_date(task.move_date),
-                "MODTAGER_NAVN": task.name,
-                "MODTAGER_BY": task.address.split(",", maxsplit=1)[-1].strip(),
-                "ADRESSE": task.address,
+                "ADRESSE1": address_lines[0],
+                "ADRESSE2": address_lines[1],
+                "ADRESSE3": address_lines[2],
+                "ADRESSE4": address_lines[3],
+                "ADRESSE5": address_lines[4],
+                "FLYTTE_ADRESSE": task.address,
                 "BELØB": str(fine_rate),
-                "KONTAKT": "Mads Halløjsen",  # TODO
+                "KONTAKT": task.case_worker_name,
                 "SAGSNUMMER": task.nova_case_number
             }
 

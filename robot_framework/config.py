@@ -2,6 +2,8 @@
 
 from datetime import datetime
 
+from itk_dev_shared_components.kmd_nova.nova_objects import Caseworker
+
 # The number of times the robot retries on an error before terminating.
 MAX_RETRY_COUNT = 3
 
@@ -31,4 +33,11 @@ FINE_RATES = (
     (datetime(2021, 1, 1), 560),
     (datetime(2020, 1, 1), 550),
     (datetime(1900, 1, 1), 500)
+)
+
+# TODO
+CASEWORKER = Caseworker(
+    name='svcitkopeno svcitkopeno',
+    ident='AZX0080',
+    uuid='0bacdddd-5c61-4676-9a61-b01a18cec1d5'
 )

@@ -57,29 +57,9 @@ def process(orchestrator_connection: OrchestratorConnection) -> None:
 
         # Generate and upload letter
         elif task.document_uuid is None:
-            template_path = r"robot_framework\docs\Din flytning er anmeldt for sent.docx"
-            result_path = "letter.docx"
-
-            fine_rate = sap.get_fine_rate(task.move_date + timedelta(days=6))
-
             address_lines = nova_process.get_address_lines(task.cpr, nova_access)
+            result_path = word_process.create_letter(task, address_lines)
 
-            keywords_replacements = {
-                "SENDEDATO": word_process.format_date(datetime.today()),
-                "ANMELDELSESDATO": word_process.format_date(task.register_date),
-                "FLYTTEDATO": word_process.format_date(task.move_date),
-                "ADRESSE1": address_lines[0],
-                "ADRESSE2": address_lines[1],
-                "ADRESSE3": address_lines[2],
-                "ADRESSE4": address_lines[3],
-                "ADRESSE5": address_lines[4],
-                "FLYTTE_ADRESSE": task.address,
-                "BELØB": str(fine_rate),
-                "KONTAKT": task.case_worker_name,
-                "SAGSNUMMER": task.nova_case_number
-            }
-
-            word_process.replace_keywords_in_word_template(template_path, result_path, keywords_replacements)
             with open(result_path, 'rb') as file:
                 document_uuid = nova_process.add_letter_to_case(task.nova_case_uuid, file, nova_access)
             os.remove(result_path)

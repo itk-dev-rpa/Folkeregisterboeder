@@ -3,7 +3,46 @@
 import zipfile
 import os
 import shutil
-from datetime import date
+from datetime import date, timedelta, datetime
+
+from robot_framework.sub_process.task import Task
+from robot_framework.sub_process import sap
+
+
+def create_letter(task: Task, address_lines: list[str]):
+    """Generate a letter from the letter template from a given task and
+    address.
+
+    Args:
+        task: The task to create the letter from.
+        address_lines: The receiver address to insert into the letter.
+
+    Returns:
+        The file path of the generated letter.
+    """
+    template_path = r"robot_framework\docs\Din flytning er anmeldt for sent.docx"
+    result_path = "letter.docx"
+
+    fine_rate = sap.get_fine_rate(task.move_date + timedelta(days=6))
+
+    keywords_replacements = {
+        "SENDEDATO": format_date(datetime.today()),
+        "ANMELDELSESDATO": format_date(task.register_date),
+        "FLYTTEDATO": format_date(task.move_date),
+        "ADRESSE1": address_lines[0],
+        "ADRESSE2": address_lines[1],
+        "ADRESSE3": address_lines[2],
+        "ADRESSE4": address_lines[3],
+        "ADRESSE5": address_lines[4],
+        "FLYTTE_ADRESSE": task.address,
+        "BELØB": str(fine_rate),
+        "KONTAKT": task.case_worker_name,
+        "SAGSNUMMER": task.nova_case_number
+    }
+
+    replace_keywords_in_word_template(template_path, result_path, keywords_replacements)
+
+    return result_path
 
 
 def replace_keywords_in_word_template(template_path: str, result_path: str, keywords_replacements: dict[str, str]):
@@ -58,25 +97,3 @@ def format_date(in_date: date) -> str:
     """
     months = ("januar", "februar", "marts", "april", "maj", "juni", "juli", "august", "september", "oktober", "november", "december")
     return f"{in_date.day}. {months[in_date.month-1]} {in_date.year}"
-
-
-# if __name__ == '__main__':
-#     # Example usage:
-#     zip_file_in = r"C:\Users\az68933\Desktop\temp\Din flytning er anmeldt for sent.docx"
-#     zip_file_out = r"C:\Users\az68933\Desktop\temp\Din flytning er anmeldt for sent 2.docx"
-
-#     keywords_replacements = {
-#         "SENDEDATO": format_date(date.today()),
-#         "ANMELDELSESDATO": format_date(date(2024, 3, 10)),
-#         "FLYTTEDATO": format_date(date(2024, 3, 1)),
-#         "MODTAGER_NAVN": "Pernille Hejsen",
-#         "MODTAGER_BY": "2345 Hejstrup",
-#         "ADRESSE": "Hejvej 2, 1234 Hejby",
-#         "BELØB": "945",
-#         "KONTAKT": "Mads Halløjsen",
-#         "SAGSNUMMER": "S2024-12345"
-#     }
-
-#     replace_keywords_in_word_template(zip_file_in, zip_file_out, keywords_replacements)
-
-#     os.startfile(zip_file_out)

@@ -154,5 +154,14 @@ def add_journal_to_case(case_uuid: str, document_file: BytesIO, nova_access: Nov
 
 
 def get_address_lines(cpr: str, nova_access: NovaAccess) -> list[str]:
+    """Get up to 5 address lines from the cpr register.
+
+    Args:
+        cpr: The cpr number to search on.
+        nova_access: The NovaAccess object used to authenticate.
+
+    Returns:
+        A list of address lines.
+    """
     address = nova_cpr.get_address_by_cpr(cpr, nova_access)['address']
     return [address.get(f'addressLine{i}', '') for i in range(1, 6)]

@@ -59,6 +59,7 @@ def search_case_info(browser: webdriver.Chrome, case_number: str) -> tuple[str, 
     browser.maximize_window()
 
     browser.find_element(By.ID, "ctl00_ContentPlaceHolder1_searchControl_imgLogo").click()
+    browser.find_element(By.ID, "ctl00_ContentPlaceHolder1_searchControl_btnClear").click()
 
     case_number_input = browser.find_element(By.ID, "ctl00_ContentPlaceHolder1_searchControl_txtSagNr")
     case_number_input.clear()

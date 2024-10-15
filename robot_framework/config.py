@@ -22,6 +22,7 @@ EFLYT_CREDS = "Eflyt"
 NOVA_CREDS = "Mathias KMD"
 NOVA_API = "Nova API"
 NOVA_KEY = "Nova Digital Post Key"
+SAP_LOGIN = ""  # TODO
 
 QUEUE_NAME = "Folkeregisterbøder"
 

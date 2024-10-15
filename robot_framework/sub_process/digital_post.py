@@ -50,7 +50,7 @@ def get_headers(orchestrator_connection: OrchestratorConnection) -> dict[str, st
     """
     browser = login(orchestrator_connection)
 
-    rv_token_l = browser.get_cookie("__RequestVerificationToken_L0tNRE5vdmFFU0RI0")['value']
+    rv_token_l = browser.get_cookie("__RequestVerificationToken_L0tNRE5vdmFFU0RI0")['value']  # TODO
     session_handler = browser.get_cookie("KMDLogonWebSessionHandler")['value']
 
     rv_token = browser.find_element(By.NAME, "__RequestVerificationToken").get_attribute("ncg-request-verification-token")
